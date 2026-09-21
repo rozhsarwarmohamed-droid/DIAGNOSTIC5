@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Grade 5 ESL Diagnostic — Cambridge Global English Stage 5</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Bungee&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN (layout utilities only — all theme color/shape comes from the styles below) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --space-navy: #100B2E;
+            --space-navy-light: #1D1657;
+            --space-navy-lighter: #2B2278;
+            --moon-cream: #F6E3A8;
+            --moon-cream-deep: #E0C179;
+            --rock-purple: #5B3E96;
+            --rock-purple-deep: #3B2966;
+            --turquoise: #2FD4C6;
+            --turquoise-deep: #1B9C92;
+            --rocket-red: #E5402E;
+            --rocket-red-deep: #B12E20;
+            --neon-orange: #FF8A3D;
+            --cosmic-green: #3ED598;
+            --buzzer-pink: #FF4E82;
+            --ink: #150F30;
+            --paper: #FFFBF0;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        /* This app's dark night-sky palette is a deliberate, fixed art direction —
+           not an unbranched default — so it stays constant regardless of system theme. */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) { --space-navy: #100B2E; --space-navy-light: #1D1657; }
+        }
+        :root[data-theme="dark"] { --space-navy: #100B2E; --space-navy-light: #1D1657; }
+
+        html { height: -webkit-fill-available; scroll-padding-top: env(safe-area-inset-top, 0px); }
+        * { box-sizing: inherit; }
+
+        body {
+            font-family: 'Baloo 2', 'Trebuchet MS', 'Segoe UI', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            background: var(--space-navy);
+            color: var(--paper);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+
+        .font-display { font-family: 'Bungee', 'Arial Black', sans-serif; letter-spacing: 0.3px; }
+
+        /* Fixed ambient starfield behind the whole app */
+        .space-ambient {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 900px 600px at 88% -8%, rgba(47,212,198,0.10), transparent 60%),
+                radial-gradient(ellipse 700px 550px at 8% 108%, rgba(91,62,150,0.22), transparent 60%),
+                linear-gradient(180deg, #130C3A 0%, #0A0722 100%);
+        }
+        .space-ambient svg { width: 100%; height: 100%; display: block; }
+
+        /* Smartboard bottom safe-zone so no button is ever blocked */
+        .smartboard-container { padding-bottom: 120px !important; }
+
+        .touch-btn {
+            min-height: 64px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .touch-btn:active { transform: scale(0.97); }
+        button.btn:active { transform: translate(3px, 3px) !important; box-shadow: 2px 2px 0 0 var(--ink) !important; }
+
+        :focus-visible { outline: 3px solid var(--turquoise); outline-offset: 2px; border-radius: 8px; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes pulse-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-success { animation: pulse-success 0.4s ease-in-out; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .animate-shake, .animate-success, .tr-dot.is-on { animation: none !important; }
+            .touch-btn, button.btn { transition: none !important; }
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--space-navy-light); }
+        ::-webkit-scrollbar-thumb { background: var(--rock-purple); border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--turquoise); }
+
+        /* Hero / header band */
+        .hero-band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; overflow: hidden; background: var(--space-navy); border-bottom: 3px solid var(--ink); }
+        .hero-illustration { position: absolute; inset: 0; }
+        .hero-illustration svg { width: 100%; height: 100%; display: block; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(16,11,46,0.90) 0%, rgba(16,11,46,0.62) 42%, rgba(16,11,46,0.18) 72%, rgba(16,11,46,0) 100%); }
+        .hero-content { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; }
+        .hero-left { display: flex; align-items: center; gap: 0.9rem; }
+        .mission-badge { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px; border-radius: 16px; background: var(--rocket-red); border: 3px solid var(--ink); box-shadow: 4px 4px 0 0 var(--ink); font-size: 1.6rem; }
+        .hero-title { font-size: clamp(1.2rem, 2.4vw, 1.9rem); color: var(--paper); text-shadow: 3px 3px 0 var(--ink); line-height: 1.15; }
+        .hero-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .pill { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; background: rgba(255,251,240,0.14); color: var(--paper); border: 1.5px solid rgba(255,251,240,0.28); white-space: nowrap; }
+        .pill-alt { background: var(--neon-orange); color: var(--ink); border-color: var(--ink); }
+
+        .tr-switch { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 16px; background: rgba(16,11,46,0.6); border: 2px solid var(--neon-orange); font-weight: 700; color: var(--paper); }
+        .tr-dot { width: 12px; height: 12px; border-radius: 999px; background: rgba(255,251,240,0.35); display: inline-block; }
+        .tr-dot.is-on { background: var(--cosmic-green); animation: pulse-success 1.4s ease-in-out infinite; }
+
+        /* Stage nav tabs */
+        .stage-tab { background: var(--space-navy-light); color: rgba(255,251,240,0.58); border: 2px solid var(--rock-purple-deep); }
+        .stage-tab.is-active { background: var(--rocket-red); color: var(--paper); border-color: var(--ink); box-shadow: 5px 5px 0 0 var(--ink); }
+
+        /* Panels (main stage containers) */
+        .panel { background: var(--space-navy-light); border: 3px solid var(--ink); border-radius: 32px 32px 32px 10px; box-shadow: 9px 9px 0 0 rgba(0,0,0,0.35); }
+
+        /* Moon-postcard highlight callout */
+        .callout-moon { background: var(--moon-cream); border: 3px solid var(--ink); border-radius: 26px 8px 26px 8px; box-shadow: 7px 7px 0 0 var(--rock-purple-deep); }
+        .callout-figure { font-family: 'Bungee', sans-serif; color: var(--rock-purple); opacity: 0.18; pointer-events: none; }
+
+        .speak-box { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); border-radius: 24px; }
+        .speak-inner { background: rgba(16,11,46,0.65); border: 2px solid var(--turquoise-deep); border-radius: 18px; }
+
+        .tr-hint-box { background: rgba(255,138,61,0.14); border: 1.5px solid var(--neon-orange); color: #FFB37A; border-radius: 14px; }
+
+        .counter-btn-minus { background: var(--space-navy-lighter); border: 2px solid var(--rock-purple-deep); color: var(--paper); }
+        .counter-btn-plus { background: var(--turquoise); border: 2px solid var(--ink); color: var(--ink); box-shadow: 4px 4px 0 0 var(--ink); }
+
+        /* Buttons */
+        button.btn { font-weight: 800; border: 3px solid var(--ink); border-radius: 18px; box-shadow: 6px 6px 0 0 var(--ink); }
+        .btn-primary { background: var(--rocket-red); color: var(--paper); }
+        .btn-secondary { background: var(--moon-cream); color: var(--ink); }
+        .btn-ghost { background: var(--space-navy-light); color: var(--paper); border-color: var(--rock-purple-deep); box-shadow: none; }
+        .btn-danger { background: var(--buzzer-pink); color: var(--ink); }
+
+        /* Stage 2: matching game */
+        .match-card { background: var(--space-navy-light); border: 2px solid var(--rock-purple-deep); color: var(--paper); }
+        .match-card:hover:not(:disabled) { background: var(--space-navy-lighter); border-color: var(--turquoise-deep); }
+        .match-card.is-selected { border-color: var(--turquoise); background: rgba(47,212,198,0.16); box-shadow: 4px 4px 0 0 var(--turquoise-deep); }
+        .match-card.is-correct { border-color: var(--cosmic-green); background: rgba(62,213,152,0.18); }
+        .match-target { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); color: var(--paper); }
+        .match-target:hover:not(:disabled) { background: var(--space-navy-lighter); border-color: var(--turquoise-deep); }
+        .match-target.is-wrong { border-color: var(--buzzer-pink); }
+        .match-target.is-correct { border-color: var(--cosmic-green); background: rgba(62,213,152,0.18); }
+
+        /* Stage 3: reading quest */
+        .reading-panel { background: var(--moon-cream); border: 3px solid var(--ink); border-radius: 28px; box-shadow: 7px 7px 0 0 var(--rock-purple-deep); }
+        .quest-card { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); border-radius: 20px; }
+        .quest-option { background: var(--space-navy-light); border: 2px solid var(--rock-purple-deep); color: var(--paper); }
+        .quest-option:hover:not(:disabled) { background: var(--space-navy-lighter); border-color: var(--turquoise); }
+        .quest-option.is-disabled { background: rgba(16,11,46,0.55); color: rgba(255,251,240,0.35); border-color: rgba(91,62,150,0.3); cursor: not-allowed; }
+        .quest-option.is-correct { background: var(--cosmic-green); color: var(--ink); border-color: var(--ink); }
+        .quest-option.is-wrong { background: var(--buzzer-pink); color: var(--ink); border-color: var(--ink); }
+
+        /* Stage 4: dashboard */
+        .stat-card { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); border-radius: 20px; }
+        .field { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); color: var(--paper); border-radius: 14px; }
+        .field:focus { outline: none; border-color: var(--turquoise); box-shadow: 0 0 0 3px rgba(47,212,198,0.25); }
+        .log-chip { background: var(--space-navy); border: 2px solid var(--rock-purple-deep); border-radius: 14px; }
+        .tag-speaking { background: rgba(47,212,198,0.18); color: var(--turquoise); border: 1px solid var(--turquoise-deep); }
+        .tag-reading { background: rgba(62,213,152,0.18); color: var(--cosmic-green); border: 1px solid var(--turquoise-deep); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Reusable sprite defs -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <symbol id="star4" viewBox="0 0 20 20">
+                <path d="M10 0 L12.5 7.5 L20 10 L12.5 12.5 L10 20 L7.5 12.5 L0 10 L7.5 7.5 Z"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Ambient starfield, fixed behind everything -->
+    <div class="space-ambient" aria-hidden="true">
+        <svg viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#FFFBF0" opacity="0.7">
+                <use href="#star4" x="40" y="60" width="8" height="8"/>
+                <use href="#star4" x="700" y="90" width="10" height="10"/>
+                <use href="#star4" x="380" y="30" width="7" height="7"/>
+                <use href="#star4" x="150" y="220" width="9" height="9"/>
+                <use href="#star4" x="620" y="300" width="7" height="7"/>
+                <use href="#star4" x="60" y="420" width="8" height="8"/>
+                <use href="#star4" x="500" y="480" width="10" height="10"/>
+                <use href="#star4" x="740" y="560" width="8" height="8"/>
+                <use href="#star4" x="220" y="600" width="9" height="9"/>
+                <use href="#star4" x="420" y="700" width="7" height="7"/>
+                <use href="#star4" x="90" y="720" width="8" height="8"/>
+                <use href="#star4" x="650" y="740" width="9" height="9"/>
+                <use href="#star4" x="320" y="180" width="6" height="6"/>
+                <use href="#star4" x="480" y="130" width="6" height="6"/>
+                <use href="#star4" x="180" y="380" width="6" height="6"/>
+                <use href="#star4" x="580" y="640" width="7" height="7"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- HERO / TOP NAVIGATION BAND -->
+    <header class="hero-band">
+        <div class="hero-illustration" aria-hidden="true">
+            <svg viewBox="0 0 1200 280" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#180F45"/>
+                        <stop offset="100%" stop-color="#0A0722"/>
+                    </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="1200" height="280" fill="url(#skyGrad)"/>
+                <g fill="#FFFBF0">
+                    <use href="#star4" x="60" y="20" width="14" height="14" opacity="0.8"/>
+                    <use href="#star4" x="150" y="55" width="10" height="10" opacity="0.6"/>
+                    <use href="#star4" x="260" y="18" width="12" height="12" opacity="0.7"/>
+                    <use href="#star4" x="340" y="70" width="8" height="8" opacity="0.5"/>
+                    <use href="#star4" x="430" y="30" width="16" height="16" opacity="0.9"/>
+                    <use href="#star4" x="200" y="110" width="10" height="10" opacity="0.55"/>
+                    <use href="#star4" x="770" y="25" width="12" height="12" opacity="0.7"/>
+                    <use href="#star4" x="900" y="150" width="10" height="10" opacity="0.5"/>
+                    <use href="#star4" x="1150" y="40" width="14" height="14" opacity="0.75"/>
+                    <use href="#star4" x="1180" y="130" width="9" height="9" opacity="0.5"/>
+                    <use href="#star4" x="640" y="20" width="10" height="10" opacity="0.6"/>
+                </g>
+                <g transform="translate(1080,65)">
+                    <ellipse cx="0" cy="0" rx="64" ry="17" fill="none" stroke="#150F30" stroke-width="12" transform="rotate(-15)"/>
+                    <ellipse cx="0" cy="0" rx="64" ry="17" fill="none" stroke="#FF8A3D" stroke-width="7" transform="rotate(-15)"/>
+                    <circle cx="0" cy="0" r="38" fill="#2FD4C6" stroke="#150F30" stroke-width="5"/>
+                    <ellipse cx="-13" cy="-14" rx="12" ry="7" fill="#FFFBF0" opacity="0.4" transform="rotate(-25 -13 -14)"/>
+                </g>
+                <polygon points="40,225 90,108 140,182 190,92 252,225" fill="#3B2966" stroke="#150F30" stroke-width="5" stroke-linejoin="round"/>
+                <polygon points="812,225 858,128 900,186 948,96 995,225" fill="#5B3E96" stroke="#150F30" stroke-width="5" stroke-linejoin="round"/>
+                <path d="M0,222 Q120,192 260,212 T520,202 Q650,190 782,216 T1042,206 Q1130,198 1200,210 L1200,280 L0,280 Z" fill="#F6E3A8" stroke="#150F30" stroke-width="5"/>
+                <ellipse cx="150" cy="238" rx="26" ry="9" fill="#E0C179" stroke="#150F30" stroke-width="3"/>
+                <ellipse cx="470" cy="248" rx="34" ry="11" fill="#E0C179" stroke="#150F30" stroke-width="3"/>
+                <ellipse cx="990" cy="232" rx="22" ry="8" fill="#E0C179" stroke="#150F30" stroke-width="3"/>
+                <ellipse cx="1110" cy="252" rx="30" ry="10" fill="#E0C179" stroke="#150F30" stroke-width="3"/>
+                <ellipse cx="600" cy="226" rx="46" ry="13" fill="#FFFBF0" opacity="0.3"/>
+                <ellipse cx="555" cy="232" rx="24" ry="8" fill="#FFFBF0" opacity="0.22"/>
+                <ellipse cx="670" cy="230" rx="28" ry="9" fill="#FFFBF0" opacity="0.22"/>
+                <g transform="translate(555,18)">
+                    <path d="M70,0 C95,18 108,42 108,65 L112,150 L105,180 L35,180 L28,150 L32,65 C32,42 45,18 70,0 Z" fill="#FFFBF0" stroke="#150F30" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M32,130 L -8,192 L36,176 Z" fill="#E5402E" stroke="#150F30" stroke-width="4" stroke-linejoin="round"/>
+                    <path d="M108,130 L148,192 L104,176 Z" fill="#E5402E" stroke="#150F30" stroke-width="4" stroke-linejoin="round"/>
+                    <path d="M70,0 C95,18 108,42 108,65 L32,65 C32,42 45,18 70,0 Z" fill="#E5402E" stroke="#150F30" stroke-width="3" stroke-linejoin="round"/>
+                    <rect x="31" y="100" width="78" height="22" fill="#E5402E" stroke="#150F30" stroke-width="3"/>
+                    <rect x="46" y="176" width="48" height="10" rx="4" fill="#150F30"/>
+                    <ellipse cx="70" cy="95" rx="23" ry="27" fill="#BFEFF2" stroke="#150F30" stroke-width="4"/>
+                    <path d="M55,80 Q60,72 70,73" fill="none" stroke="#FFFBF0" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+                </g>
+                <use href="#star4" x="500" y="50" width="14" height="14" fill="#FFFBF0" opacity="0.8"/>
+                <use href="#star4" x="770" y="80" width="16" height="16" fill="#F6E3A8" opacity="0.85"/>
+            </svg>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-left">
+                <span class="mission-badge" aria-hidden="true">🚀</span>
+                <div>
+                    <h1 class="font-display hero-title">Grade 5 ESL Diagnostic</h1>
+                    <div class="hero-pills">
+                        <span class="pill pill-alt">Cambridge Global English, Stage 5</span>
+                        <span class="pill">Unit 1: Talking About People</span>
+                        <span class="pill">20-Minute Diagnostic</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Turkish Language Support Toggle Switch -->
+            <button id="tr-toggle-btn" onclick="toggleTurkishSupport()" class="tr-switch">
+                <span class="text-xl">🇹🇷</span>
+                <span id="tr-toggle-label">TR Hints: OFF</span>
+                <span id="tr-indicator" class="tr-dot"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 smartboard-container flex flex-col">
+
+        <!-- STAGE PROGRESS INDICATOR -->
+        <nav class="grid grid-cols-4 gap-2 mb-6 mt-4">
+            <button id="nav-stage-1" onclick="switchStage(1)" class="stage-tab is-active touch-btn rounded-2xl font-bold text-sm sm:text-base">
+                1. Warmup 📡
+            </button>
+            <button id="nav-stage-2" onclick="switchStage(2)" class="stage-tab touch-btn rounded-2xl font-bold text-sm sm:text-base">
+                2. Actions 🎯
+            </button>
+            <button id="nav-stage-3" onclick="switchStage(3)" class="stage-tab touch-btn rounded-2xl font-bold text-sm sm:text-base">
+                3. Reading 🌕
+            </button>
+            <button id="nav-stage-4" onclick="switchStage(4)" class="stage-tab touch-btn rounded-2xl font-bold text-sm sm:text-base">
+                4. Dashboard 🛰️
+            </button>
+        </nav>
+
+        <!-- STAGE 1: WARMUP & SPEAKING BASELINE -->
+        <section id="stage-1" class="flex-1 flex flex-col justify-between gap-6 panel p-6">
+
+            <!-- Routine Signal Callout -->
+            <div class="callout-moon p-6 text-center relative overflow-hidden">
+                <div class="callout-figure absolute -right-4 -bottom-6 text-8xl" aria-hidden="true">123</div>
+                <span class="font-display text-xs block mb-2" style="color:var(--rock-purple)">Classroom Routine Signal</span>
+                <h2 class="font-display text-2xl sm:text-3xl mb-2" style="color:var(--ink)">"1, 2, 3... Eyes on Me!" 👁️</h2>
+                <p class="text-lg" style="color:var(--rock-purple-deep)">Students reply: <strong style="color:var(--rocket-red)">"1, 2... Eyes on You!"</strong></p>
+                <div class="tr-hint hidden mt-3 tr-hint-box text-sm font-bold inline-block px-3 py-1">
+                    🇹🇷 Sınıf Dikkat Çağrısı: "1, 2, 3... Gözler Bende!" -> "1, 2... Gözler Sende!"
+                </div>
+            </div>
+
+            <!-- Speaking Prompt Box -->
+            <div class="speak-box p-6 text-center space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full" style="background:rgba(47,212,198,0.16); color:var(--turquoise); border:1px solid var(--turquoise-deep);">
+                    <span>🗣️</span> <span class="font-bold text-sm">Speaking &amp; Clothes Check (Present Continuous)</span>
+                </div>
+
+                <div class="p-6 speak-inner">
+                    <p class="text-2xl sm:text-3xl font-bold leading-relaxed" style="color:var(--paper)">
+                        "My name is <span class="border-b-2 px-2" style="color:var(--turquoise); border-color:var(--turquoise)">[Name]</span>."
+                    </p>
+                    <p class="text-2xl sm:text-3xl font-bold leading-relaxed mt-3" style="color:var(--paper)">
+                        "Today I am wearing <span class="border-b-2 px-2" style="color:var(--neon-orange); border-color:var(--neon-orange)">[Clothes &amp; Colors]</span>."
+                    </p>
+                    <p class="text-sm mt-2" style="color:rgba(255,251,240,0.6)">Example: "...a red shirt and blue trousers." 👕👖</p>
+
+                    <!-- Turkish Prompt Support -->
+                    <div class="tr-hint hidden mt-4 p-3 tr-hint-box text-base">
+                        🇹🇷 <strong>İpucu (Türkçe):</strong> "Benim adım [İsim]. Bugün [Kırmızı gömlek ve mavi pantolon] giyiyorum."
+                    </div>
+                </div>
+
+                <!-- Turn Tracker Counter -->
+                <div class="flex items-center justify-center gap-6 pt-2">
+                    <button onclick="changeTurns(-1)" class="counter-btn-minus w-14 h-14 rounded-2xl text-2xl font-black active:scale-95">-</button>
+                    <div class="text-center">
+                        <span class="text-xs uppercase font-bold tracking-wider block" style="color:rgba(255,251,240,0.55)">Student Turns</span>
+                        <span id="turn-count" class="text-4xl font-black" style="color:var(--neon-orange)">0</span>
+                    </div>
+                    <button onclick="changeTurns(1)" class="counter-btn-plus w-14 h-14 rounded-2xl text-2xl font-black active:scale-95">+</button>
+                </div>
+            </div>
+
+            <!-- Stage Navigation Footer -->
+            <div class="flex justify-end pt-2">
+                <button onclick="switchStage(2)" class="btn btn-primary touch-btn font-black text-lg px-8">
+                    Next: Actions Match ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- STAGE 2: VOCABULARY & ACTION MATCHING -->
+        <section id="stage-2" class="hidden flex-1 flex-col justify-between gap-6 panel p-6">
+
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4" style="border-bottom:1px solid var(--rock-purple-deep)">
+                <div>
+                    <h2 class="font-display text-xl flex items-center gap-2" style="color:var(--paper)">
+                        <span>🎯</span> Match the Action &amp; Routine
+                    </h2>
+                    <p class="text-sm" style="color:rgba(255,251,240,0.6)">Tap an English phrase on the left, then tap its matching icon card on the right!</p>
+                </div>
+                <div class="px-4 py-2 rounded-2xl font-bold" style="background:rgba(47,212,198,0.14); border:1px solid var(--turquoise-deep); color:var(--turquoise)">
+                    Matches: <span id="match-score" class="text-xl font-black" style="color:var(--neon-orange)">0</span> / 6
+                </div>
+            </div>
+
+            <!-- Matching Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 my-auto">
+                <!-- Text Phrases (Left Column) -->
+                <div id="match-text-column" class="flex flex-col gap-3">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <!-- Action Target Cards (Right Column) -->
+                <div id="match-target-column" class="grid grid-cols-2 gap-3">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Stage Navigation Footer -->
+            <div class="flex justify-between items-center pt-2">
+                <button onclick="switchStage(1)" class="btn btn-ghost touch-btn font-bold px-6">
+                    ⬅️ Back
+                </button>
+                <button onclick="switchStage(3)" class="btn btn-primary touch-btn font-black text-lg px-8">
+                    Next: Reading Quest ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- STAGE 3: READING QUEST -->
+        <section id="stage-3" class="hidden flex-1 flex-col justify-between gap-6 panel p-6">
+
+            <div class="pb-3" style="border-bottom:1px solid var(--rock-purple-deep)">
+                <span class="text-xs font-bold block" style="color:var(--neon-orange)">Reading Comprehension &amp; Grammar Check</span>
+                <h2 class="font-display text-xl flex items-center gap-2" style="color:var(--paper)">
+                    <span>📖</span> Lara's First Day Story
+                </h2>
+            </div>
+
+            <!-- Reading Passage Display -->
+            <div class="reading-panel p-6 relative">
+                <p id="reading-text-en" class="text-xl sm:text-2xl font-medium leading-relaxed" style="color:var(--ink)">
+                    "Hello! My name is <strong style="color:var(--rocket-red)">Lara</strong>. I am in <strong style="color:var(--rock-purple)">Grade 5</strong>. Today I am wearing a <strong style="color:#B8860B">yellow jacket</strong> and <strong style="color:var(--turquoise-deep)">blue jeans</strong>. I have got a <strong style="color:#1F8A5A">green backpack</strong> 🎒. Right now, I am sitting at my desk and reading an English book."
+                </p>
+
+                <!-- Turkish Full Text Support Gloss -->
+                <div id="reading-text-tr" class="tr-hint hidden mt-4 pt-4 text-base leading-relaxed p-4 rounded-2xl" style="border-top:2px dashed var(--moon-cream-deep); color:#8A4A12; background:rgba(255,138,61,0.14)">
+                    🇹🇷 <strong>Metin Çevirisi:</strong> "Merhaba! Benim adım Lara. 5. sınıftayım. Bugün sarı bir ceket ve mavi kot pantolon giyiyorum. Yeşil bir sırt çantam var. Şu anda sıramda oturuyorum ve İngilizce bir kitap okuyorum."
+                </div>
+            </div>
+
+            <!-- Interactive Questions Container -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-bold uppercase tracking-wider" style="color:rgba(255,251,240,0.55)">Tap the correct answer on screen:</span>
+                    <span id="quest-progress" class="text-xs font-bold px-3 py-1 rounded-full" style="background:var(--space-navy); border:1px solid var(--rock-purple-deep); color:var(--turquoise)">Question 1 of 3</span>
+                </div>
+
+                <!-- Q1 -->
+                <div id="quest-q1" class="quest-card p-4 space-y-3">
+                    <h3 class="text-lg font-bold flex items-center gap-2" style="color:var(--paper)">
+                        <span>1️⃣</span> What grade is Lara in?
+                        <span class="tr-hint hidden text-xs font-normal" style="color:var(--neon-orange)">(Lara kaçıncı sınıfta?)</span>
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="answerQuest(1, 'A', false, this)" class="touch-btn quest-option rounded-xl font-bold">Grade 4 🏫</button>
+                        <button onclick="answerQuest(1, 'B', true, this)" class="touch-btn quest-option rounded-xl font-bold">Grade 5 🏫</button>
+                        <button onclick="answerQuest(1, 'C', false, this)" class="touch-btn quest-option rounded-xl font-bold">Grade 6 🏫</button>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div id="quest-q2" class="quest-card p-4 space-y-3">
+                    <h3 class="text-lg font-bold flex items-center gap-2" style="color:var(--paper)">
+                        <span>2️⃣</span> What is Lara wearing today?
+                        <span class="tr-hint hidden text-xs font-normal" style="color:var(--neon-orange)">(Lara bugün ne giyiyor?)</span>
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="answerQuest(2, 'A', false, this)" class="touch-btn quest-option rounded-xl font-bold">Blue coat 🧥</button>
+                        <button onclick="answerQuest(2, 'B', true, this)" class="touch-btn quest-option rounded-xl font-bold">Yellow jacket 🧥</button>
+                        <button onclick="answerQuest(2, 'C', false, this)" class="touch-btn quest-option rounded-xl font-bold">Red sweater 🧶</button>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div id="quest-q3" class="quest-card p-4 space-y-3">
+                    <h3 class="text-lg font-bold flex items-center gap-2" style="color:var(--paper)">
+                        <span>3️⃣</span> What has Lara got?
+                        <span class="tr-hint hidden text-xs font-normal" style="color:var(--neon-orange)">(Lara'nın neyi var?)</span>
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="answerQuest(3, 'A', true, this)" class="touch-btn quest-option rounded-xl font-bold">Green backpack 🎒</button>
+                        <button onclick="answerQuest(3, 'B', false, this)" class="touch-btn quest-option rounded-xl font-bold">Brown bag 💼</button>
+                        <button onclick="answerQuest(3, 'C', false, this)" class="touch-btn quest-option rounded-xl font-bold">Blue pencil case ✏️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage Navigation Footer -->
+            <div class="flex justify-between items-center pt-2">
+                <button onclick="switchStage(2)" class="btn btn-ghost touch-btn font-bold px-6">
+                    ⬅️ Back
+                </button>
+                <button onclick="switchStage(4)" class="btn btn-primary touch-btn font-black text-lg px-8">
+                    View Teacher Dashboard 🛰️
+                </button>
+            </div>
+        </section>
+
+        <!-- STAGE 4: TEACHER OBSERVATION DASHBOARD -->
+        <section id="stage-4" class="hidden flex-1 flex-col justify-between gap-6 panel p-6">
+
+            <div class="flex items-center justify-between pb-4" style="border-bottom:1px solid var(--rock-purple-deep)">
+                <div>
+                    <h2 class="font-display text-xl flex items-center gap-2" style="color:var(--paper)">
+                        <span>🛰️</span> Class Diagnostic Summary
+                    </h2>
+                    <p class="text-sm" style="color:rgba(255,251,240,0.6)">Observational baseline data gathered during the 20-minute session.</p>
+                </div>
+                <button onclick="resetWholeLesson()" class="btn btn-danger px-4 py-2 font-bold text-sm">
+                    🔄 Reset Lesson Data
+                </button>
+            </div>
+
+            <!-- Live Session Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="stat-card p-4 text-center">
+                    <span class="text-xs font-bold uppercase tracking-wider block mb-1" style="color:rgba(255,251,240,0.55)">Speaking Turns</span>
+                    <span id="dash-turns" class="text-3xl font-black" style="color:var(--neon-orange)">0</span>
+                    <span class="text-xs block mt-1" style="color:rgba(255,251,240,0.4)">Students Spoken</span>
+                </div>
+                <div class="stat-card p-4 text-center">
+                    <span class="text-xs font-bold uppercase tracking-wider block mb-1" style="color:rgba(255,251,240,0.55)">Vocab Matching</span>
+                    <span id="dash-matches" class="text-3xl font-black" style="color:var(--turquoise)">0 / 6</span>
+                    <span class="text-xs block mt-1" style="color:rgba(255,251,240,0.4)">Actions Mastered</span>
+                </div>
+                <div class="stat-card p-4 text-center">
+                    <span class="text-xs font-bold uppercase tracking-wider block mb-1" style="color:rgba(255,251,240,0.55)">Reading Comprehension</span>
+                    <span id="dash-quest" class="text-3xl font-black" style="color:var(--cosmic-green)">0 / 3</span>
+                    <span class="text-xs block mt-1" style="color:rgba(255,251,240,0.4)">Quest Score</span>
+                </div>
+            </div>
+
+            <!-- Quick Teacher Notes / Student Level Matrix -->
+            <div class="stat-card p-5 space-y-4">
+                <h3 class="text-base font-bold flex items-center justify-between" style="color:var(--paper)">
+                    <span>📝 Quick Student Observation Logger</span>
+                    <span class="text-xs" style="color:var(--turquoise)">Save for Stage 5, Unit 1 Tiering</span>
+                </h3>
+
+                <!-- Input Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <input id="student-name-input" type="text" placeholder="Student Name..." class="field px-4 py-3 text-sm">
+                    <select id="student-speaking-select" class="field px-3 py-3 text-sm">
+                        <option value="Speaking: On Level">Speaking: On Level</option>
+                        <option value="Speaking: Needs Support">Speaking: Needs Support</option>
+                        <option value="Speaking: Advanced">Speaking: Advanced</option>
+                    </select>
+                    <select id="student-reading-select" class="field px-3 py-3 text-sm">
+                        <option value="Reading: On Level">Reading: On Level</option>
+                        <option value="Reading: Needs Decoding Help">Reading: Needs Decoding Help</option>
+                        <option value="Reading: Advanced">Reading: Advanced</option>
+                    </select>
+                    <button onclick="addStudentObservation()" class="touch-btn btn btn-secondary font-bold text-sm">
+                        + Log Student
+                    </button>
+                </div>
+
+                <!-- Logged Student List -->
+                <div id="observation-list" class="max-h-48 overflow-y-auto space-y-2 pt-2">
+                    <p class="text-xs italic text-center py-4" style="color:rgba(255,251,240,0.4)">No student records logged yet today.</p>
+                </div>
+            </div>
+
+            <!-- Stage Navigation Footer -->
+            <div class="flex justify-between items-center pt-2">
+                <button onclick="switchStage(3)" class="btn btn-ghost touch-btn font-bold px-6">
+                    ⬅️ Back to Quest
+                </button>
+                <div class="text-xs font-semibold text-right" style="color:rgba(255,251,240,0.5)">
+                    Diagnostic complete — ready to launch into Cambridge Global English, Stage 5! 🚀
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // APP STATE MANAGEMENT
+        let currentState = 1;
+        let isTurkishActive = false;
+        let studentTurns = 0;
+        let matchedPairs = 0;
+        let selectedTextCard = null;
+        let questAnswers = { 1: false, 2: false, 3: false };
+        let studentObservations = [];
+
+        // WEB AUDIO SYNTHESIZER (No external sound asset dependencies)
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+        }
+
+        function playSound(type) {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now); // A3
+                    osc.frequency.setValueAtTime(180, now + 0.1);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch (e) {
+                console.log("Audio play blocked or unsupported:", e);
+            }
+        }
+
+        // STAGE SWITCHING LOGIC
+        function switchStage(stageNum) {
+            playSound('click');
+            currentState = stageNum;
+
+            // Hide all stages
+            for (let i = 1; i <= 4; i++) {
+                const stageEl = document.getElementById(`stage-${i}`);
+                const navEl = document.getElementById(`nav-stage-${i}`);
+
+                if (stageEl) {
+                    stageEl.classList.add('hidden');
+                    stageEl.classList.remove('flex');
+                }
+
+                if (navEl) {
+                    navEl.className = "stage-tab touch-btn rounded-2xl font-bold text-sm sm:text-base";
+                }
+            }
+
+            // Activate chosen stage
+            const activeStage = document.getElementById(`stage-${stageNum}`);
+            const activeNav = document.getElementById(`nav-stage-${stageNum}`);
+
+            if (activeStage) {
+                activeStage.classList.remove('hidden');
+                activeStage.classList.add('flex');
+            }
+
+            if (activeNav) {
+                activeNav.className = "stage-tab is-active touch-btn rounded-2xl font-bold text-sm sm:text-base";
+            }
+
+            // Sync Dashboard stats if entering Stage 4
+            if (stageNum === 4) {
+                updateDashboardStats();
+            }
+        }
+
+        // TURKISH HINTS TOGGLE LOGIC
+        function toggleTurkishSupport() {
+            playSound('click');
+            isTurkishActive = !isTurkishActive;
+
+            const label = document.getElementById('tr-toggle-label');
+            const indicator = document.getElementById('tr-indicator');
+            const hints = document.querySelectorAll('.tr-hint');
+
+            if (isTurkishActive) {
+                label.innerText = 'TR Hints: ON 🇹🇷';
+                indicator.classList.add('is-on');
+                hints.forEach(el => el.classList.remove('hidden'));
+            } else {
+                label.innerText = 'TR Hints: OFF';
+                indicator.classList.remove('is-on');
+                hints.forEach(el => el.classList.add('hidden'));
+            }
+        }
+
+        // STAGE 1: TURN COUNTER
+        function changeTurns(delta) {
+            playSound('click');
+            studentTurns = Math.max(0, studentTurns + delta);
+            document.getElementById('turn-count').innerText = studentTurns;
+        }
+
+        // STAGE 2: VOCABULARY & ROUTINE MATCHING DATA
+        const matchData = [
+            { id: 1, text: "He is reading a book", tr: "O kitap okuyor", icon: "📖", label: "Reading Book" },
+            { id: 2, text: "She is writing in her notebook", tr: "Defterine yazıyor", icon: "✍️", label: "Writing" },
+            { id: 3, text: "They are playing football", tr: "Futbol oynuyorlar", icon: "⚽", label: "Football" },
+            { id: 4, text: "She has got a red backpack", tr: "Kırmızı çantası var", icon: "🎒", label: "Backpack" },
+            { id: 5, text: "Raise your hand quietly", tr: "Sessizce elini kaldır", icon: "✋", label: "Raise Hand" },
+            { id: 6, text: "Listen to the teacher", tr: "Öğretmeni dinle", icon: "🎧", label: "Listen" }
+        ];
+
+        function initStage2Matching() {
+            const textCol = document.getElementById('match-text-column');
+            const targetCol = document.getElementById('match-target-column');
+
+            if (!textCol || !targetCol) return;
+
+            textCol.innerHTML = '';
+            targetCol.innerHTML = '';
+
+            // Shuffle targets
+            const shuffledTargets = [...matchData].sort(() => Math.random() - 0.5);
+
+            matchData.forEach(item => {
+                // Text Card
+                const card = document.createElement('button');
+                card.id = `match-text-${item.id}`;
+                card.onclick = () => selectTextCard(item.id);
+                card.className = "touch-btn match-card w-full rounded-2xl text-left px-4 py-3 flex flex-col justify-center transition-all";
+                card.innerHTML = `
+                    <span class="text-base font-bold">${item.text}</span>
+                    <span class="tr-hint ${isTurkishActive ? '' : 'hidden'} text-xs mt-0.5" style="color:var(--neon-orange)">🇹🇷 ${item.tr}</span>
+                `;
+                textCol.appendChild(card);
+            });
+
+            shuffledTargets.forEach(item => {
+                // Icon Target Card
+                const target = document.createElement('button');
+                target.id = `match-target-${item.id}`;
+                target.onclick = () => selectTargetCard(item.id);
+                target.className = "touch-btn match-target rounded-2xl p-4 flex flex-col items-center justify-center gap-1 transition-all";
+                target.innerHTML = `
+                    <span class="text-4xl">${item.icon}</span>
+                    <span class="text-xs font-bold mt-1" style="color:rgba(255,251,240,0.75)">${item.label}</span>
+                `;
+                targetCol.appendChild(target);
+            });
+        }
+
+        function selectTextCard(id) {
+            playSound('click');
+            // Clear prior selection style
+            matchData.forEach(item => {
+                const el = document.getElementById(`match-text-${item.id}`);
+                if (el && !el.disabled) {
+                    el.classList.remove('is-selected');
+                }
+            });
+
+            selectedTextCard = id;
+            const chosenEl = document.getElementById(`match-text-${id}`);
+            if (chosenEl) {
+                chosenEl.classList.add('is-selected');
+            }
+        }
+
+        function selectTargetCard(targetId) {
+            if (!selectedTextCard) {
+                playSound('error');
+                return;
+            }
+
+            const textEl = document.getElementById(`match-text-${selectedTextCard}`);
+            const targetEl = document.getElementById(`match-target-${targetId}`);
+
+            if (selectedTextCard === targetId) {
+                // Correct Match!
+                playSound('success');
+                matchedPairs++;
+                document.getElementById('match-score').innerText = matchedPairs;
+
+                textEl.disabled = true;
+                targetEl.disabled = true;
+
+                textEl.className = "touch-btn match-card is-correct w-full rounded-2xl text-left px-4 py-3 flex flex-col justify-center animate-success";
+                targetEl.className = "touch-btn match-target is-correct rounded-2xl p-4 flex flex-col items-center justify-center gap-1 animate-success";
+
+                selectedTextCard = null;
+            } else {
+                // Incorrect Match
+                playSound('error');
+                targetEl.classList.add('animate-shake', 'is-wrong');
+                setTimeout(() => {
+                    targetEl.classList.remove('animate-shake', 'is-wrong');
+                }, 400);
+            }
+        }
+
+        // STAGE 3: READING QUEST ANSWER EVALUATION
+        function answerQuest(qNum, option, isCorrect, btnEl) {
+            playSound(isCorrect ? 'success' : 'error');
+
+            const parentCard = document.getElementById(`quest-q${qNum}`);
+            const buttons = parentCard.querySelectorAll('button');
+
+            buttons.forEach(btn => {
+                btn.className = "touch-btn quest-option is-disabled rounded-xl font-bold";
+                btn.disabled = true;
+            });
+
+            if (isCorrect) {
+                btnEl.className = "touch-btn quest-option is-correct rounded-xl font-bold animate-success";
+                questAnswers[qNum] = true;
+            } else {
+                btnEl.className = "touch-btn quest-option is-wrong rounded-xl font-bold animate-shake";
+                questAnswers[qNum] = false;
+            }
+        }
+
+        // STAGE 4: DASHBOARD UPDATING & OBSERVATION LOGGING
+        function updateDashboardStats() {
+            document.getElementById('dash-turns').innerText = studentTurns;
+            document.getElementById('dash-matches').innerText = `${matchedPairs} / 6`;
+
+            const questScore = Object.values(questAnswers).filter(Boolean).length;
+            document.getElementById('dash-quest').innerText = `${questScore} / 3`;
+        }
+
+        function addStudentObservation() {
+            playSound('click');
+            const nameInput = document.getElementById('student-name-input');
+            const speakSelect = document.getElementById('student-speaking-select');
+            const readSelect = document.getElementById('student-reading-select');
+
+            const name = nameInput.value.trim();
+            if (!name) return;
+
+            const record = {
+                name: name,
+                speaking: speakSelect.value,
+                reading: readSelect.value
+            };
+
+            studentObservations.push(record);
+            nameInput.value = '';
+
+            renderObservationList();
+        }
+
+        function renderObservationList() {
+            const container = document.getElementById('observation-list');
+            if (!container) return;
+
+            if (studentObservations.length === 0) {
+                container.innerHTML = `<p class="text-xs italic text-center py-4" style="color:rgba(255,251,240,0.4)">No student records logged yet today.</p>`;
+                return;
+            }
+
+            container.innerHTML = studentObservations.map(s => `
+                <div class="log-chip p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span class="font-bold text-sm" style="color:var(--paper)">👤 ${s.name}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-1 rounded-lg tag-speaking">${s.speaking}</span>
+                        <span class="px-2 py-1 rounded-lg tag-reading">${s.reading}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function resetWholeLesson() {
+            playSound('click');
+            studentTurns = 0;
+            matchedPairs = 0;
+            selectedTextCard = null;
+            questAnswers = { 1: false, 2: false, 3: false };
+            studentObservations = [];
+
+            document.getElementById('turn-count').innerText = 0;
+            document.getElementById('match-score').innerText = 0;
+
+            // Reset quest buttons
+            for (let i = 1; i <= 3; i++) {
+                const parent = document.getElementById(`quest-q${i}`);
+                if (parent) {
+                    const buttons = parent.querySelectorAll('button');
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.className = "touch-btn quest-option rounded-xl font-bold";
+                    });
+                }
+            }
+
+            initStage2Matching();
+            renderObservationList();
+            switchStage(1);
+        }
+
+        // INITIALIZE APP ON LOAD
+        window.onload = function() {
+            initStage2Matching();
+            renderObservationList();
+        };
+    </script>
+</body>
+</html>
